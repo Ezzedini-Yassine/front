@@ -8,6 +8,7 @@ import Profile from './components/dashboard/Profile';
 import SitesManager from './components/dashboard/SitesManager';
 import UserManager from './components/dashboard/UserManager';
 import DimmingManager from './components/dashboard/DimmingManager';
+import PrivateRoute from './components/PrivateRoute'; // Import PrivateRoute
 
 function App() {
   return (
@@ -17,12 +18,15 @@ function App() {
       <Route path="/confirm/:token" element={<ConfirmEmail />} />
       <Route path="/login" element={<Login />} />
       {/* Protected dashboard with sub-routes */}
+      {/* Protected routes */}
+      <Route element={<PrivateRoute />}>
       <Route path="/dashboard" element={localStorage.getItem('authToken') ? <Dashboard /> : <Navigate to="/login" />}>
         <Route index element={<DashboardContent />} /> {/* Default sub-route */}
         <Route path="profile" element={<Profile />} />
         <Route path="sites-manager" element={<SitesManager />} />
         <Route path="user-manager" element={<UserManager />} />
         <Route path="dimming-manager" element={<DimmingManager />} />
+        </Route>
       </Route>
     </Routes>
   );

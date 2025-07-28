@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import api from '../api'; // Import the Axios instance
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate(); // For redirection after login
@@ -16,23 +17,13 @@ const Login: React.FC = () => {
     const credentials = { email, password };
 
     try {
-      const response = await fetch('http://localhost:4000/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || 'Login failed');
-      }
-
-      const { token } = await response.json();
-      localStorage.setItem('authToken', token); // Store JWT in localStorage
+      const response = await api.post('/api/users/login', credentials);
+      const { accessToken } = response.data; // Extract accessToken from response
+      localStorage.setItem('accessToken', accessToken); // Store access token (refresh is in cookie)
       setSuccess('Login successful!');
-      navigate('/dashboard'); // Redirect to dashboard or home (adjust path as needed)
+      navigate('/dashboard'); // Redirect to dashboard
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.message || 'Login failed');
     }
   };
 
