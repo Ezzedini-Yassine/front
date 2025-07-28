@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../api'; // Adjust path if needed
+import api from '../../api'; // Adjust path if needed (e.g., '../api' based on structure)
+import Card from '../Card'; // Import Card component
+
+interface UserStats {
+  totalUsers: number;
+  confirmedUsers: number;
+  activeUsers: number;
+}
 
 const DashboardContent: React.FC = () => {
-  const [data, setData] = useState<any>(null);
+  const [stats, setStats] = useState<UserStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProtectedData = async () => {
+    const fetchStats = async () => {
       try {
-        const response = await api.get('/api/protected'); // Your backend protected endpoint
-        setData(response.data);
+        const response = await api.get('/api/users/stats');
+        setStats(response.data);
       } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to fetch data');
+        setError(err.response?.data?.message || 'Failed to fetch stats');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProtectedData();
+    fetchStats();
   }, []);
 
   if (loading) return <p className="text-gray-600">Loading...</p>;
@@ -26,8 +33,14 @@ const DashboardContent: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-3xl font-bold text-gray-800">Welcome to Dashboard</h2>
-      {data && <p>Protected data: {JSON.stringify(data)}</p>}
+      <h2 className="text-3xl font-bold text-gray-800 mb-6">Welcome to Dashboard</h2>
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card title="Total Users" value={stats.totalUsers} />
+          <Card title="Confirmed Users" value={stats.confirmedUsers} />
+          <Card title="Active Users" value={stats.activeUsers} />
+        </div>
+      )}
     </div>
   );
 };
