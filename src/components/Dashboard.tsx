@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { FiGrid, FiUser, FiMapPin, FiUsers, FiSliders, FiSettings } from 'react-icons/fi';
+import { FiGrid, FiUser, FiMapPin, FiUsers, FiSliders, FiSettings, FiList } from 'react-icons/fi'; // Added FiList for Lines Manager
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ const Dashboard: React.FC = () => {
     { name: 'Sites Manager', icon: <FiMapPin size={20} />, path: '/dashboard/sites-manager' },
     { name: 'User Manager', icon: <FiUsers size={20} />, path: '/dashboard/user-manager' },
     { name: 'Dimming Manager', icon: <FiSliders size={20} />, path: '/dashboard/dimming-manager' },
+    { name: 'Lines Manager', icon: <FiList size={20} />, path: '/dashboard/lines-manager' }, // New item
   ];
 
   return (
@@ -41,7 +42,7 @@ const Dashboard: React.FC = () => {
         </aside>
 
         {/* Center Content Area */}
-        <main className="flex-1 p-10">
+        <main className="w-4/5 p-10"> {/* Updated to w-4/5 for 80% width as per previous request */}
           <Outlet /> {/* Renders the sub-component based on route */}
         </main>
       </div>
